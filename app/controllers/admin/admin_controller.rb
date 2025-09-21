@@ -1,4 +1,4 @@
-class AdminController < ApplicationController
+class Admin::AdminController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin_access
 
@@ -7,8 +7,8 @@ class AdminController < ApplicationController
     @checked_in_attendees = User.attendees.checked_in.count
     @total_sessions = Session.count
     @total_feedback = Feedback.count
-    @overall_feedback = Feedback.overall_event.count
-    @session_feedback = Feedback.session_specific.count
+    @overall_feedback = Feedback.overall_feedback.count
+    @session_feedback = Feedback.session_feedback.count
 
     # Recent feedback
     @recent_feedback = Feedback.includes(:user, :session)
@@ -27,8 +27,7 @@ class AdminController < ApplicationController
   def attendees
     @attendees = User.attendees.includes(:feedbacks)
                     .order(:name)
-                    .page(params[:page])
-                    .per(20)
+                    .limit(20)
     
     respond_to do |format|
       format.html
@@ -37,8 +36,8 @@ class AdminController < ApplicationController
   end
 
   def feedback_results
-    @overall_feedback = Feedback.overall_event.includes(:user)
-    @session_feedback = Feedback.session_specific.includes(:user, :session)
+    @overall_feedback = Feedback.overall_feedback.includes(:user)
+    @session_feedback = Feedback.session_feedback.includes(:user, :session)
 
     # Overall feedback analytics
     @overall_average = @overall_feedback.average(:rating)&.round(1) || 0

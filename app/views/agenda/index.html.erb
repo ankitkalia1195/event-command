@@ -6,6 +6,9 @@
       <p class="text-gray-400">Welcome, <%= @current_user.name %>!</p>
     </div>
 
+    <!-- Flash Messages -->
+    <%= render partial: "shared/flash_messages" %>
+
     <!-- Check-in Section -->
     <div class="bg-gray-900 rounded-lg p-6 mb-8">
       <div class="flex items-center justify-between">
