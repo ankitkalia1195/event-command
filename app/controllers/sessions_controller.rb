@@ -73,4 +73,11 @@ class SessionsController < ApplicationController
     session[:admin_view] = nil
     redirect_to root_path, notice: "Successfully logged out!"
   end
+
+  # Session details (for individual sessions)
+  def show
+    @session = Session.find(params[:id])
+    @speaker = @session.speaker
+    @current_user = current_user
+  end
 end

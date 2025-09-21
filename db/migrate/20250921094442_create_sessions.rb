@@ -10,6 +10,6 @@ class CreateSessions < ActiveRecord::Migration[8.0]
       t.timestamps
     end
     add_index :sessions, :start_time
-    add_index :sessions, [:start_time, :end_time]
+    add_index :sessions, [ :start_time, :end_time ]
   end
 end
