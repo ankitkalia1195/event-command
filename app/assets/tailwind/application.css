@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* Custom Omise Brand Colors */
+:root {
+  --omise-teal: #00D4AA;
+  --omise-teal-dark: #00B894;
+  --omise-teal-light: #00E5C7;
+}
+
+/* Dark mode as default */
+.dark {
+  --bg-primary: #000000;
+  --bg-secondary: #1F2937;
+  --text-primary: #FFFFFF;
+  --text-secondary: #D1D5DB;
+  --accent: var(--omise-teal);
+}
+
+/* Light mode */
+.light {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F3F4F6;
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --accent: var(--omise-teal);
+}
+
+/* Apply theme colors */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom utility classes */
+.bg-omise-teal {
+  background-color: var(--omise-teal);
+}
+
+.text-omise-teal {
+  color: var(--omise-teal);
+}
+
+.border-omise-teal {
+  border-color: var(--omise-teal);
+}
+
+.hover\:bg-omise-teal-dark:hover {
+  background-color: var(--omise-teal-dark);
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
