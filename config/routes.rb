@@ -27,16 +27,10 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
-    get "dashboard", to: "dashboard#index", as: :dashboard
-    get "attendees", to: "attendees#index", as: :attendees
-    get "attendees/export", to: "attendees#export", as: :export_attendees
-    get "feedback", to: "feedback#index", as: :feedback
-    get "sessions", to: "sessions#index", as: :sessions
-    get "sessions/new", to: "sessions#new", as: :new_session
-    post "sessions", to: "sessions#create"
-    get "sessions/:id/edit", to: "sessions#edit", as: :edit_session
-    patch "sessions/:id", to: "sessions#update"
-    delete "sessions/:id", to: "sessions#destroy"
+    get "dashboard", to: "admin#dashboard", as: :dashboard
+    get "attendees", to: "admin#attendees", as: :attendees
+    get "feedback_results", to: "admin#feedback_results", as: :feedback_results
+    get "switch_to_attendee", to: "admin#switch_to_attendee_view", as: :switch_to_attendee_view
   end
 
   # Admin view switcher

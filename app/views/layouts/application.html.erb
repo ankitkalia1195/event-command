@@ -26,10 +26,27 @@
     <!-- Navigation Header -->
     <nav class="bg-gray-900 border-b border-gray-800 px-4 py-3">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <%= image_tag "omise-logo.png", alt: "Omise", class: "h-8 w-auto" %>
-          <span class="text-xl font-bold text-omise-teal">Command O</span>
-        </div>
+            <div class="flex items-center space-x-4">
+              <%= image_tag "omise-logo.png", alt: "Omise", class: "h-8 w-auto" %>
+              <span class="text-xl font-bold text-omise-teal">Command O</span>
+            </div>
+            
+            <!-- User Actions -->
+            <div class="flex items-center space-x-4">
+              <!-- Admin Link (only visible to admins) -->
+              <% if current_user&.admin? %>
+                <%= link_to "Admin Dashboard", admin_dashboard_path, 
+                      class: "px-3 py-2 bg-omise-teal text-black rounded-lg hover:bg-omise-teal-dark transition-colors text-sm font-medium" %>
+              <% end %>
+              
+              <!-- User Info & Logout -->
+              <div class="flex items-center space-x-3">
+                <span class="text-sm text-gray-300">Welcome, <%= current_user&.name || "Guest" %></span>
+                <%= link_to "Logout", logout_path, 
+                      data: { "turbo-method": :delete },
+                      class: "px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium" %>
+              </div>
+            </div>
         
         <!-- Theme Switcher -->
         <button 

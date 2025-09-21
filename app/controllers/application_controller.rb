@@ -32,6 +32,9 @@ class ApplicationController < ActionController::Base
     current_user.present?
   end
 
+  # Make current_user available in views
+  helper_method :current_user, :user_signed_in?
+
   def admin_required?
     false # Override in controllers that require admin access
   end
