@@ -22,7 +22,7 @@ class LoginToken < ApplicationRecord
     expires_at <= Time.current
   end
 
-  def valid?
+  def token_valid?
     !used? && !expired?
   end
 
@@ -38,9 +38,9 @@ class LoginToken < ApplicationRecord
   end
 
   def self.find_valid(token)
-    find_by(token: token, used: false)
-         .where("expires_at > ?", Time.current)
-         .first
+    token_record = find_by(token: token, used: false)
+    return nil unless token_record&.token_valid?
+    token_record
   end
 
   private

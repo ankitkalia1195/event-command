@@ -13,6 +13,10 @@ class LoginMailer < ApplicationMailer
   private
 
   def magic_login_url(token:)
-    Rails.application.routes.url_helpers.magic_login_url(token: token)
+    Rails.application.routes.url_helpers.magic_login_url(
+      token: token,
+      host: Rails.application.config.action_mailer.default_url_options[:host],
+      port: Rails.application.config.action_mailer.default_url_options[:port]
+    )
   end
 end

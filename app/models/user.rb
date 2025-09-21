@@ -31,10 +31,6 @@ class User < ApplicationRecord
     is_speaker?
   end
 
-  def checked_in?
-    checked_in?
-  end
-
   def can_access_admin?
     admin?
   end
