@@ -28,6 +28,14 @@ production:
     <<: *default
     url: <%= ENV.fetch("DATABASE_URL", "") %>
 
+  queue:
+    <<: *default
+    url: <%= ENV.fetch("DATABASE_URL", "") %>   
+
+  cache:
+    <<: *default
+    url: <%= ENV.fetch("DATABASE_URL", "") %>        
+
   # cache:
   #   <<: *default
   #   database: event_command_production_cache
