@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: event_command_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 5435:5432
