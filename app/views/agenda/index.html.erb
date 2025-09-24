@@ -61,8 +61,14 @@
                         class: "inline-flex items-center px-4 py-2 border border-omise-teal text-sm font-medium rounded-lg text-omise-teal hover:bg-omise-teal hover:text-black transition-colors" %>
                   
                   <% if session.past? && session.can_receive_feedback? %>
-                    <%= link_to "Give Feedback", new_session_feedback_path(session), 
-                          class: "inline-flex items-center px-4 py-2 bg-omise-teal text-sm font-medium rounded-lg text-black hover:bg-omise-teal-dark transition-colors" %>
+                    <% existing_feedback = @current_user.feedbacks.find_by(session: session) %>
+                    <% if existing_feedback %>
+                      <%= link_to "Edit Feedback", edit_session_feedback_path(session, existing_feedback), 
+                            class: "inline-flex items-center px-4 py-2 bg-omise-teal text-sm font-medium rounded-lg text-white hover:bg-omise-teal-dark transition-colors" %>
+                    <% else %>
+                      <%= link_to "Give Feedback", new_session_feedback_path(session), 
+                            class: "inline-flex items-center px-4 py-2 bg-omise-teal text-sm font-medium rounded-lg text-black hover:bg-omise-teal-dark transition-colors" %>
+                    <% end %>
                   <% end %>
                 </div>
               </div>
@@ -84,8 +90,14 @@
 
     <!-- Overall Event Feedback -->
     <div class="mt-12 text-center">
-      <%= link_to "Overall Event Feedback", new_event_feedback_path, 
-            class: "inline-flex items-center px-6 py-3 border border-omise-teal text-base font-medium rounded-lg text-omise-teal hover:bg-omise-teal hover:text-black transition-colors" %>
+      <% existing_event_feedback = @current_user.feedbacks.overall_feedback.first %>
+      <% if existing_event_feedback %>
+        <%= link_to "Edit Overall Event Feedback", edit_event_feedback_path(existing_event_feedback), 
+              class: "inline-flex items-center px-6 py-3 bg-omise-teal text-base font-medium rounded-lg text-white hover:bg-omise-teal-dark transition-colors" %>
+      <% else %>
+        <%= link_to "Overall Event Feedback", new_event_feedback_path, 
+              class: "inline-flex items-center px-6 py-3 border border-omise-teal text-base font-medium rounded-lg text-omise-teal hover:bg-omise-teal hover:text-black transition-colors" %>
+      <% end %>
     </div>
   </div>
 </div>
