@@ -22,7 +22,7 @@
 
     <!-- Feedback Form -->
     <div class="bg-gray-900 rounded-lg p-6">
-      <%= form_with model: [@session, @feedback], local: true, class: "space-y-6", data: { controller: "rating-form" } do |form| %>
+      <%= form_with model: @feedback, url: create_session_feedback_path(@session), local: true, class: "space-y-6", data: { controller: "rating-form" } do |form| %>
         <!-- Rating Section -->
         <div>
           <label id="session-rating-label" class="block text-lg font-medium text-white mb-4">How would you rate this session?</label>
