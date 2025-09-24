@@ -22,11 +22,11 @@
 
     <!-- Feedback Form -->
     <div class="bg-gray-900 rounded-lg p-6">
-      <%= form_with model: @feedback, url: create_event_feedback_path, local: true, class: "space-y-6", data: { controller: "rating-form" } do |form| %>
+      <%= form_with model: @feedback, url: create_event_feedback_path, local: true, class: "space-y-6", data: { controller: "rating" } do |form| %>
         <!-- Rating Section -->
         <div>
           <label id="rating-label" class="block text-lg font-medium text-white mb-4">How would you rate the overall conference?</label>
-          <div class="flex space-x-2" data-controller="rating" role="radiogroup" aria-labelledby="rating-label">
+          <div class="flex space-x-2" role="radiogroup" aria-labelledby="rating-label">
             <% (1..5).each do |rating| %>
               <button type="button" 
                       data-rating-target="star" 
@@ -42,7 +42,7 @@
               </button>
             <% end %>
           </div>
-          <%= form.hidden_field :rating, data: { rating_target: "input" }, required: true, id: "feedback_rating" %>
+          <%= form.hidden_field :rating, "data-rating-target": "input", required: true, id: "feedback_rating" %>
           <% if @feedback.errors[:rating].any? %>
             <p class="mt-2 text-sm text-red-400"><%= @feedback.errors[:rating].first %></p>
           <% else %>

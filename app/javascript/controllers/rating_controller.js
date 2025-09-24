@@ -11,7 +11,6 @@ export default class extends Controller {
   select(event) {
     const rating = parseInt(event.currentTarget.dataset.rating)
     this.selectedRating = rating
-    console.log('Rating selected:', rating)
     this.updateStars()
     this.updateInput()
   }
@@ -34,13 +33,18 @@ export default class extends Controller {
   updateInput() {
     if (this.hasInputTarget) {
       this.inputTarget.value = this.selectedRating
-      console.log('Setting input value to:', this.selectedRating, 'Actual value:', this.inputTarget.value)
+      
+      // Set the value attribute as well
+      this.inputTarget.setAttribute('value', this.selectedRating)
+      
       // Trigger multiple events to ensure the value is properly set
       this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }))
       this.inputTarget.dispatchEvent(new Event('input', { bubbles: true }))
       
-      // Also set the value directly on the element
-      this.inputTarget.setAttribute('value', this.selectedRating)
+      // Force a form validation update
+      if (this.inputTarget.form) {
+        this.inputTarget.form.dispatchEvent(new Event('input', { bubbles: true }))
+      }
     }
   }
 
