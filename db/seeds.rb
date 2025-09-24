@@ -52,8 +52,8 @@ end
 
 Session.find_or_create_by!(title: 'Building Scalable APIs with Ruby on Rails') do |session|
   session.abstract = 'Learn best practices for building robust, scalable APIs using Ruby on Rails. We\'ll cover performance optimization, caching strategies, database design, and API versioning techniques used in production systems.'
-  session.start_time = 3.hours.ago
-  session.end_time = 2.hours.ago
+  session.start_time = 4.hours.ago
+  session.end_time = 3.hours.ago
   session.speaker = speaker2
 end
 
