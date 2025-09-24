@@ -1,0 +1,132 @@
+<div class="min-h-screen bg-black text-white">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Back Button -->
+    <div class="mb-6">
+      <%= link_to agenda_path, class: "inline-flex items-center text-omise-teal hover:text-omise-teal-dark transition-colors" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Agenda
+      <% end %>
+    </div>
+
+    <!-- Session Header -->
+    <div class="bg-gray-900 rounded-lg p-6 mb-8">
+      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+        <div class="flex-1 mb-6 lg:mb-0">
+          <div class="flex items-center space-x-4 mb-4">
+            <span class="text-lg font-medium text-omise-teal">
+              <%= @session.start_time.strftime("%I:%M %p") %> - <%= @session.end_time.strftime("%I:%M %p") %>
+            </span>
+            <span class="text-sm text-gray-400">
+              <%= @session.duration_in_minutes %> minutes
+            </span>
+            <span class="px-2 py-1 text-xs font-medium rounded-full <%= @session.current? ? 'bg-green-600 text-white' : @session.past? ? 'bg-gray-600 text-white' : 'bg-blue-600 text-white' %>">
+              <%= @session.current? ? 'Live' : @session.past? ? 'Completed' : 'Upcoming' %>
+            </span>
+          </div>
+          
+          <h1 class="text-3xl font-bold text-white mb-4">
+            <%= @session.title %>
+          </h1>
+          
+          <div class="flex items-center space-x-4 mb-6">
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-omise-teal rounded-full flex items-center justify-center mr-3">
+                <span class="text-black font-bold text-sm">
+                  <%= @speaker.name.split.map(&:first).join %>
+                </span>
+              </div>
+              <div>
+                <p class="text-white font-medium"><%= @speaker.name %></p>
+                <p class="text-gray-400 text-sm">Speaker</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="lg:ml-8">
+          <% if @session.past? && @session.can_receive_feedback? %>
+            <%= link_to new_session_feedback_path(@session), 
+                  class: "inline-flex items-center px-6 py-3 bg-omise-teal text-white font-medium rounded-lg hover:bg-omise-teal-dark transition-colors" do %>
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+              Give Feedback
+            <% end %>
+          <% elsif @session.upcoming? %>
+            <div class="text-center p-4 bg-gray-800 rounded-lg">
+              <p class="text-gray-400 text-sm">Feedback available after session ends</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session Abstract -->
+    <div class="bg-gray-900 rounded-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold text-white mb-4">About This Session</h2>
+      <% if @session.abstract.present? %>
+        <div class="prose prose-invert max-w-none">
+          <p class="text-gray-300 leading-relaxed"><%= simple_format(@session.abstract) %></p>
+        </div>
+      <% else %>
+        <p class="text-gray-400 italic">No description available for this session.</p>
+      <% end %>
+    </div>
+
+    <!-- Speaker Information -->
+    <div class="bg-gray-900 rounded-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold text-white mb-4">Speaker</h2>
+      <div class="flex items-start space-x-4">
+        <div class="w-16 h-16 bg-omise-teal rounded-full flex items-center justify-center flex-shrink-0">
+          <span class="text-black font-bold text-lg">
+            <%= @speaker.name.split.map(&:first).join %>
+          </span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-white mb-2"><%= @speaker.name %></h3>
+          <p class="text-gray-400 mb-3">Speaker</p>
+          <p class="text-gray-300">
+            <%= @speaker.name %> is an experienced speaker at the Command O Conference, 
+            bringing valuable insights and expertise to this session.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session Stats (if past session) -->
+    <% if @session.past? %>
+      <div class="bg-gray-900 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-white mb-4">Session Feedback</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-omise-teal mb-2">
+              <%= @session.average_rating %>
+            </div>
+            <div class="text-gray-400 text-sm">Average Rating</div>
+            <div class="flex justify-center mt-2">
+              <% 5.times do |i| %>
+                <svg class="w-4 h-4 <%= i < @session.average_rating ? 'text-yellow-400' : 'text-gray-600' %>" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+              <% end %>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-omise-teal mb-2">
+              <%= @session.feedback_count %>
+            </div>
+            <div class="text-gray-400 text-sm">Total Feedback</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-omise-teal mb-2">
+              <%= @session.duration_in_minutes %>
+            </div>
+            <div class="text-gray-400 text-sm">Minutes</div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

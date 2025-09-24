@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Custom Omise Brand Colors */
+:root {
+  --omise-teal: #00D4AA;
+  --omise-teal-dark: #00B894;
+  --omise-teal-light: #00E5C7;
+}
+
+/* Custom utility classes */
+.bg-omise-teal {
+  background-color: var(--omise-teal);
+}
+
+.text-omise-teal {
+  color: var(--omise-teal);
+}
+
+.border-omise-teal {
+  border-color: var(--omise-teal);
+}
+
+.hover\:bg-omise-teal-dark:hover {
+  background-color: var(--omise-teal-dark);
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
