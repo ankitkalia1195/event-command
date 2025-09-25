@@ -16,6 +16,10 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy", as: :logout
   get "magic_login/:token", to: "magic_login#show", as: :magic_login
 
+  # Face authentication routes
+  get "face_login", to: "sessions#face_login", as: :face_login
+  post "face_authenticate", to: "sessions#face_authenticate", as: :face_authenticate
+
   # Attendee routes
   get "agenda", to: "agenda#index", as: :agenda
   post "check_in", to: "agenda#check_in", as: :check_in
