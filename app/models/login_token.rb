@@ -62,6 +62,9 @@ class LoginToken < ApplicationRecord
   end
 
   def not_used
+    # Only validate if we're not currently marking the token as used
+    return if used_changed? && used?
+
     if used?
       errors.add(:used, "token has already been used")
     end

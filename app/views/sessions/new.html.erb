@@ -26,9 +26,9 @@
 
       <%= form_with url: login_path, method: :post, local: true, class: "space-y-6" do |form| %>
         <div>
-          <%= form.label :email, "Company Email", class: "block text-sm font-medium text-gray-300 mb-2" %>
+          <%= form.label :email, "Email Address", class: "block text-sm font-medium text-gray-300 mb-2" %>
           <%= form.email_field :email, 
-                placeholder: "your.name@company.com",
+                placeholder: "your.email@example.com",
                 required: true,
                 autocomplete: "email",
                 class: "appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-600 placeholder-gray-400 text-white bg-gray-800 focus:outline-none focus:ring-2 focus:ring-omise-teal focus:border-transparent focus:z-10 sm:text-sm" %>

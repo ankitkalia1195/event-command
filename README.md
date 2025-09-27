@@ -155,7 +155,7 @@ DATABASE_HOST=localhost       # Default: localhost
 
 The application comes with seeded sample data including:
 
-- **Admin User**: `admin@company.com` (admin privileges)
+- **Admin User**: `admin@company.com` (admin privileges) - or any email for testing
 - **Speaker Users**: Sample speakers for conference sessions
 - **Attendee Users**: Sample attendees for testing
 - **Conference Sessions**: Sample sessions with realistic data
@@ -166,7 +166,7 @@ The application comes with seeded sample data including:
 After running `rails db:seed`, you can:
 
 1. **Login as Admin**: Use `admin@company.com` to access admin features
-2. **Login as Attendee**: Use any `@company.com` email to test attendee features
+2. **Login as Attendee**: Use any email address - users are created automatically
 3. **View Sessions**: Browse the conference agenda
 4. **Test Feedback**: Submit feedback on completed sessions
 
@@ -246,7 +246,7 @@ The app is built mobile-first with responsive design:
 
 The app uses a custom magic link authentication system:
 
-1. **Email Validation**: Only `@company.com` domains allowed
+1. **Email Validation**: Any valid email address is accepted
 2. **Token Generation**: 32-character secure random tokens
 3. **Token Expiry**: 15-minute expiration for security
 4. **Email Delivery**: Branded HTML emails with magic links

@@ -15,16 +15,9 @@ class SessionsController < ApplicationController
       return
     end
 
-    # Validate company email domain
-    unless email.end_with?("@company.com")
-      flash.now[:alert] = "Please use your company email address."
-      render :new, status: :unprocessable_entity
-      return
-    end
-
-    # Find or create user
+    # Find or create user (any email domain is now allowed)
     user = User.find_or_create_by(email: email) do |u|
-      u.name = email.split("@").first.humanize
+      u.name = email.split("@").first.humanize  # Set first name equal to email as requested
       u.role = "attendee"
     end
 

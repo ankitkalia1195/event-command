@@ -23,8 +23,5 @@ class MagicLoginController < ApplicationController
 
     flash[:notice] = "Successfully logged in!"
     redirect_to agenda_path
-  rescue => e
-    Rails.logger.error "Magic login error: #{e.message}"
-    redirect_to root_path, alert: "An error occurred during login."
   end
 end

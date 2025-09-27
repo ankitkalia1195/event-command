@@ -60,7 +60,7 @@ end
 
 ## Authentication Flow
 
-1. **Email Validation**: Only @company.com domains allowed
+1. **Email Validation**: Any valid email address accepted, users created automatically
 2. **Token Generation**: Random 32-character token with 15-minute expiry
 3. **Email Delivery**: Branded email with magic link
 4. **Token Verification**: Check expiry and usage status
@@ -130,7 +130,7 @@ end
 
 3. ✅ **Authentication System**
    - Custom magic link authentication (no Devise)
-   - Company email domain validation (@company.com)
+   - Automatic user creation for any valid email
    - 15-minute token expiry with secure random generation
    - Branded email templates (HTML + text)
    - Session management and logout functionality

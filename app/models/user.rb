@@ -4,8 +4,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :role, inclusion: { in: %w[attendee admin] }
 
-  # Custom validation for company email domain
-  validate :company_email_domain
+  # Email domain validation removed - any email is now allowed
 
   # Associations
   has_many :sessions, foreign_key: :speaker_id, dependent: :nullify
@@ -52,14 +51,4 @@ class User < ApplicationRecord
   end
 
   private
-
-  def company_email_domain
-    return if email.blank?
-
-    # Only allow @company.com domain for now
-    # In production, this should be configurable
-    unless email.end_with?("@company.com")
-      errors.add(:email, "must be a company email address")
-    end
-  end
 end
