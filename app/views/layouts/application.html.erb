@@ -26,107 +26,78 @@
     <!-- Navigation Header -->
     <nav class="bg-gray-900 border-b border-gray-800 px-4 py-3">
       <div class="max-w-7xl mx-auto">
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center justify-between">
+        <!-- Navigation -->
+        <div class="flex items-center justify-between">
           <!-- Logo -->
           <div class="flex items-center space-x-4">
             <%= image_tag "omise-logo.png", alt: "Omise", class: "h-8 w-auto" %>
             <span class="text-xl font-bold text-omise-teal">Command O</span>
           </div>
           
-          <!-- Right Side Actions -->
-          <div class="flex items-center space-x-4">
-            <!-- Admin Link (only visible to admins) -->
-            <% if current_user&.admin? %>
-              <%= link_to "Admin Dashboard", admin_dashboard_path, 
-                    class: "px-3 py-2 bg-omise-teal text-black rounded-lg hover:bg-omise-teal-dark transition-colors text-sm font-medium" %>
-            <% end %>
-            
-            <!-- User Info -->
-            <span class="text-sm text-gray-300">Welcome, <%= current_user&.name || "Guest" %></span>
-            
-            
-            <!-- Logout Button -->
-            <%= link_to "Logout", logout_path, 
-                  data: { "turbo-method": :delete },
-                  class: "px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium" %>
-          </div>
-        </div>
-
-        <!-- Mobile Navigation -->
-        <div class="md:hidden">
-          <!-- Top Row: Logo and Profile -->
-          <div class="flex items-center justify-between relative">
-            <div class="flex items-center space-x-3">
-              <%= image_tag "omise-logo.png", alt: "Omise", class: "h-6 w-auto" %>
-              <span class="text-lg font-bold text-omise-teal">Command O</span>
-            </div>
-            
-            <!-- Profile Section with Dropdown -->
-            <div class="relative flex justify-end" data-controller="mobile-dropdown">
-              <button 
-                class="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-800 transition-colors"
-                data-action="click->mobile-dropdown#toggle"
-              >
-                <!-- Profile Circle with Initials -->
-                <div class="w-8 h-8 bg-omise-teal rounded-full flex items-center justify-center">
-                  <span class="text-xs font-bold text-black">
-                    <%= current_user&.name&.split&.map(&:first)&.join&.upcase || "G" %>
-                  </span>
-                </div>
-                
-                <!-- Welcome Text -->
-                <div class="hidden sm:block">
-                  <span class="text-sm text-gray-300">Welcome, <%= current_user&.name&.split&.first || "Guest" %></span>
-                </div>
-                
-                <!-- Dropdown Arrow -->
-                <svg class="w-4 h-4 text-gray-400 transition-transform duration-200" data-mobile-dropdown-target="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </button>
+          <!-- Profile Section with Dropdown -->
+          <div class="relative flex justify-end" data-controller="mobile-dropdown">
+            <button 
+              class="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-800 transition-colors"
+              data-action="click->mobile-dropdown#toggle"
+            >
+              <!-- Welcome Text -->
+              <div class="hidden sm:block">
+                <span class="text-sm text-gray-300">Welcome, <%= current_user&.name&.split&.first || "Guest" %></span>
+              </div>
               
-              <!-- Dropdown Menu (Hidden by default) -->
-              <div 
-                class="mobile-dropdown-menu absolute right-0 top-full mt-3 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700 hidden z-50 max-w-[calc(100vw-2rem)]"
-                data-mobile-dropdown-target="menu"
-                style="right: 0; left: auto; transform: translateX(0); min-width: 200px;"
-              >
+              <!-- Profile Circle with Initials -->
+              <div class="w-8 h-8 bg-omise-teal rounded-full flex items-center justify-center">
+                <span class="text-xs font-bold text-black">
+                  <%= current_user&.name&.split&.map(&:first)&.join&.upcase || "G" %>
+                </span>
+              </div>
+              
+              <!-- Dropdown Arrow -->
+              <svg class="w-4 h-4 text-gray-400 transition-transform duration-200" data-mobile-dropdown-target="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            
+            <!-- Dropdown Menu (Hidden by default) -->
+            <div 
+              class="mobile-dropdown-menu absolute right-0 top-full mt-3 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700 hidden z-50 max-w-[calc(100vw-2rem)]"
+              data-mobile-dropdown-target="menu"
+              style="right: 0; left: auto; transform: translateX(0); min-width: 200px;"
+            >
+              <div class="py-1">
+                <!-- User Info -->
+                <div class="px-4 py-3 border-b border-gray-700">
+                  <div class="text-sm font-medium text-white">
+                    <%= current_user&.name || "Guest" %>
+                  </div>
+                  <div class="text-xs text-gray-400">
+                    <%= current_user&.email %>
+                  </div>
+                </div>
+                
+                <!-- Menu Items -->
                 <div class="py-1">
-                  <!-- User Info -->
-                  <div class="px-4 py-3 border-b border-gray-700">
-                    <div class="text-sm font-medium text-white">
-                      <%= current_user&.name || "Guest" %>
-                    </div>
-                    <div class="text-xs text-gray-400">
-                      <%= current_user&.email %>
-                    </div>
-                  </div>
-                  
-                  <!-- Menu Items -->
-                  <div class="py-1">
-                    <!-- Admin Link (only visible to admins) -->
-                    <% if current_user&.admin? %>
-                      <%= link_to admin_dashboard_path, 
-                            class: "flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" do %>
-                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Admin Dashboard
-                      <% end %>
-                    <% end %>
-                    
-                    
-                    <!-- Logout -->
-                    <%= link_to logout_path, 
-                          data: { "turbo-method": :delete },
-                          class: "flex items-center px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors" do %>
+                  <!-- Admin Link (only visible to admins) -->
+                  <% if current_user&.admin? %>
+                    <%= link_to admin_dashboard_path, 
+                          class: "flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" do %>
                       <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
-                      Logout
+                      Admin Dashboard
                     <% end %>
-                  </div>
+                  <% end %>
+                  
+                  
+                  <!-- Logout -->
+                  <%= link_to logout_path, 
+                        data: { "turbo-method": :delete },
+                        class: "flex items-center px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors" do %>
+                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Logout
+                  <% end %>
                 </div>
               </div>
             </div>
