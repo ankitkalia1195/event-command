@@ -10,20 +10,18 @@ Follow these steps to set up and test face recognition authentication.
 ---
 
 ## **Step 1: Start the Services** 🚀
-
-### Option A: Automated Setup
 ```bash
 # Run the automated setup script
 ./setup_face_demo.sh
 ```
 
-### Option B: Manual Setup
+
 ```bash
 # 1. Start Face Recognition API
 ./start_face_service.sh
 
 # 2. In another terminal, start Rails
-bin/rails server -p 3000
+rails s -b 0.0.0.0
 ```
 
 **Verify services are running:**
@@ -251,65 +249,5 @@ For each additional user:
 - **Add rate limiting** and security measures
 - **Consider liveness detection** for enhanced security
 
----
-
-## **Quick Test Script** ⚡
-
-Save this as `test_face_auth.rb`:
-
-```ruby
-#!/usr/bin/env ruby
-# Test face authentication setup
-
-puts "🔍 Testing Face Authentication Setup"
-puts "=" * 40
-
-# Check if services are running
-require 'net/http'
-
-begin
-  response = Net::HTTP.get_response(URI('http://localhost:8001/health'))
-  if response.code == '200'
-    puts "✅ Face API is running"
-  else
-    puts "❌ Face API returned: #{response.code}"
-  end
-rescue => e
-  puts "❌ Face API not accessible: #{e.message}"
-end
-
-begin
-  response = Net::HTTP.get_response(URI('http://localhost:3000'))
-  if response.code == '200'
-    puts "✅ Rails server is running"
-  else
-    puts "❌ Rails server returned: #{response.code}"
-  end
-rescue => e
-  puts "❌ Rails server not accessible: #{e.message}"
-end
-
-# Check database
-require_relative 'config/environment'
-
-users_with_faces = User.where.not(face_encoding_data: [nil, ''])
-puts "👥 Users with face encodings: #{users_with_faces.count}"
-
-users_with_faces.each do |user|
-  encoding_length = JSON.parse(user.face_encoding_data).length rescue 0
-  puts "   • #{user.name} (#{user.email}): #{encoding_length} dimensions"
-end
-
-if users_with_faces.count == 0
-  puts "⚠️  No users have face encodings yet"
-  puts "   Run: python python_services/encode_sample.py /path/to/photo.jpg"
-end
-
-puts "\n🎯 Ready to test at: http://localhost:3000/face_login"
-```
-
-Run with: `ruby test_face_auth.rb`
-
----
 
 That's it! Your face recognition system is now set up and ready to use. The authentication flow will match your live camera image against stored face encodings and log you in automatically if a match is found.
