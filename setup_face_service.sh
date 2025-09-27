@@ -17,7 +17,7 @@ source python_services/venv/bin/activate
 
 # Install Python dependencies
 echo "Installing Python dependencies..."
-pip install -r python_services/requirements.txt
+pip install -r python_services/face_service/requirements.txt
 
 echo "Setup complete!"
 echo ""
@@ -26,5 +26,7 @@ echo "1. Activate the virtual environment: source python_services/venv/bin/activ
 echo "2. Start the service: python python_services/face_service/api.py"
 echo "   OR: uvicorn python_services.face_service.api:app --reload --host 0.0.0.0 --port 8001"
 echo ""
+echo " OR: Run the script from root project directory as ./start_face_service.sh"
 echo "The service will be available at: http://localhost:8001"
 echo "Face login will be available at: http://localhost:3000/face_login"
+echo "Enjoy Experimenting!"
