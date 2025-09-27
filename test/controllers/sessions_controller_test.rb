@@ -33,7 +33,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "should create user and send magic link for new email" do
     assert_difference "User.count", 1 do
       assert_difference "LoginToken.count", 1 do
-        assert_emails 1 do
+        assert_enqueued_jobs 1, only: LoginEmailJob do
           post login_path, params: { email: "newuser@example.com" }
         end
       end
@@ -52,7 +52,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "should not create duplicate user for existing email" do
     assert_no_difference "User.count" do
       assert_difference "LoginToken.count", 1 do
-        assert_emails 1 do
+        assert_enqueued_jobs 1, only: LoginEmailJob do
           post login_path, params: { email: @user.email }
         end
       end

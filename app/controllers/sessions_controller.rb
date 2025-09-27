@@ -24,8 +24,8 @@ class SessionsController < ApplicationController
     # Generate login token
     login_token = LoginToken.generate_for_user(user)
 
-    # Send magic link email
-    LoginMailer.magic_link(user, login_token).deliver_now
+    # Send magic link email via background job (runs in same process with Solid Queue)
+    LoginEmailJob.perform_later(user.id, login_token.id)
 
     flash[:notice] = "Check your email for a login link!"
     redirect_to root_path

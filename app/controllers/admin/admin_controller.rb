@@ -33,7 +33,11 @@ class Admin::AdminController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv { send_data generate_attendees_csv, filename: "attendees-#{Date.current}.csv" }
+      format.csv {
+        # Get all attendees for CSV export (no pagination)
+        all_attendees = User.attendees.includes(:feedbacks).order(:name)
+        send_data generate_attendees_csv(all_attendees), filename: "attendees-#{Date.current}.csv"
+      }
     end
   end
 
@@ -73,13 +77,13 @@ class Admin::AdminController < ApplicationController
 
   private
 
-  def generate_attendees_csv
+  def generate_attendees_csv(attendees = @attendees)
     require "csv"
 
     CSV.generate(headers: true) do |csv|
       csv << [ "Name", "Email", "Checked In", "Feedback Count", "Last Feedback" ]
 
-      @attendees.each do |attendee|
+      attendees.each do |attendee|
         csv << [
           attendee.name,
           attendee.email,
