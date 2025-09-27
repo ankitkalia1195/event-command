@@ -35,3 +35,11 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Ignore face encoding json 
+face_encoding.json
+
+# Ignore all python venv and caches
+/python_services/venv/*
+/python_services/face_service/__pycache__/*
+.DS_Store
