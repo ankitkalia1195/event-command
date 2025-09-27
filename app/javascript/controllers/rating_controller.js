@@ -5,7 +5,16 @@ export default class extends Controller {
 
   connect() {
     this.selectedRating = 0
+    this.initializeRating()
     this.setupFormValidation()
+  }
+
+  initializeRating() {
+    // Check if there's already a rating value in the input
+    if (this.hasInputTarget && this.inputTarget.value) {
+      this.selectedRating = parseInt(this.inputTarget.value)
+      this.updateStars()
+    }
   }
 
   select(event) {

@@ -22,8 +22,12 @@ Rails.application.routes.draw do
   get "sessions/:id", to: "sessions#show", as: :session
   get "feedback/session/:id", to: "feedback#new_session", as: :new_session_feedback
   post "feedback/session/:id", to: "feedback#create_session", as: :create_session_feedback
+  get "feedback/session/:session_id/edit/:id", to: "feedback#edit_session", as: :edit_session_feedback
+  patch "feedback/session/:session_id/:id", to: "feedback#update_session", as: :update_session_feedback
   get "feedback/event", to: "feedback#new_event", as: :new_event_feedback
   post "feedback/event", to: "feedback#create_event", as: :create_event_feedback
+  get "feedback/event/edit/:id", to: "feedback#edit_event", as: :edit_event_feedback
+  patch "feedback/event/:id", to: "feedback#update_event", as: :update_event_feedback
 
   # Admin routes
   namespace :admin do

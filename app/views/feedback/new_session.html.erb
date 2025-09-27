@@ -10,6 +10,9 @@
       <% end %>
     </div>
 
+    <!-- Flash Messages -->
+    <%= render partial: "shared/flash_messages" %>
+
     <!-- Session Info -->
     <div class="bg-gray-900 rounded-lg p-6 mb-8">
       <h1 class="text-2xl font-bold text-white mb-2">Session Feedback</h1>
@@ -22,7 +25,7 @@
 
     <!-- Feedback Form -->
     <div class="bg-gray-900 rounded-lg p-6">
-      <%= form_with model: @feedback, url: create_session_feedback_path(@session), local: true, class: "space-y-6", data: { controller: "rating" } do |form| %>
+      <%= form_with model: @feedback, url: create_session_feedback_path(@session), class: "space-y-6", data: { controller: "rating" } do |form| %>
         <!-- Rating Section -->
         <div>
           <label id="session-rating-label" class="block text-lg font-medium text-white mb-4">How would you rate this session?</label>
