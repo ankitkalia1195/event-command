@@ -101,8 +101,8 @@ class Admin::AdminControllerTest < ActionDispatch::IntegrationTest
     get admin_dashboard_path
 
     # Check that statistics are displayed
-    assert_select "text", "2" # total attendees
-    assert_select "text", "1" # checked-in attendees
+    assert_select "text", "3" # total users (1 admin + 2 attendees)
+    assert_select "text", "1" # checked-in users
     assert_select "text", "2" # total sessions
     assert_select "text", "3" # total feedback
   end
@@ -124,7 +124,7 @@ class Admin::AdminControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", "Attendee List"
-    assert_select "table tbody tr", count: 2 # 2 attendees
+    assert_select "table tbody tr", count: 3 # 3 users (admin + 2 attendees)
   end
 
   test "should require admin access for attendees page" do
@@ -156,8 +156,8 @@ class Admin::AdminControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal "text/csv", response.media_type
-    assert_match /Name,Email,Checked In,Feedback Count,Last Feedback/, response.body
-    assert_match /Regular User,user@example.com,Yes,3/, response.body
+    assert_match /Name,Email,Role,Checked In,Feedback Count,Last Feedback/, response.body
+    assert_match /Regular User,user@example.com,Attendee,Yes,3/, response.body
   end
 
   test "should get feedback results page for admin" do
@@ -283,8 +283,8 @@ class Admin::AdminControllerTest < ActionDispatch::IntegrationTest
     get admin_dashboard_path
 
     # Check that the statistics show correct counts
-    assert_select "text", "2" # total attendees
-    assert_select "text", "1" # checked-in attendees
+    assert_select "text", "3" # total users (1 admin + 2 attendees)
+    assert_select "text", "1" # checked-in users
     assert_select "text", "2" # total sessions
     assert_select "text", "3" # total feedback
   end
@@ -324,6 +324,6 @@ class Admin::AdminControllerTest < ActionDispatch::IntegrationTest
     get admin_attendees_path
 
     assert_response :success
-    assert_select "table tbody tr", count: 0 # no attendees
+    assert_select "table tbody tr", count: 1 # only admin user
   end
 end

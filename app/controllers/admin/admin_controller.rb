@@ -3,8 +3,8 @@ class Admin::AdminController < ApplicationController
   before_action :ensure_admin_access
 
   def dashboard
-    @total_attendees = User.attendees.count
-    @checked_in_attendees = User.attendees.checked_in.count
+    @total_attendees = User.where(role: [ "attendee", "admin" ]).count
+    @checked_in_attendees = User.where(role: [ "attendee", "admin" ]).checked_in.count
     @total_sessions = Session.count
     @total_feedback = Feedback.count
     @overall_feedback = Feedback.overall_feedback.count
@@ -26,7 +26,7 @@ class Admin::AdminController < ApplicationController
   end
 
   def attendees
-    @attendees = User.attendees.includes(:feedbacks)
+    @attendees = User.where(role: [ "attendee", "admin" ]).includes(:feedbacks)
                     .order(:name)
                     .page(params[:page])
                     .per(20)
@@ -35,7 +35,7 @@ class Admin::AdminController < ApplicationController
       format.html
       format.csv {
         # Get all attendees for CSV export (no pagination)
-        all_attendees = User.attendees.includes(:feedbacks).order(:name)
+        all_attendees = User.where(role: [ "attendee", "admin" ]).includes(:feedbacks).order(:name)
         send_data generate_attendees_csv(all_attendees), filename: "attendees-#{Date.current}.csv"
       }
     end
@@ -81,12 +81,13 @@ class Admin::AdminController < ApplicationController
     require "csv"
 
     CSV.generate(headers: true) do |csv|
-      csv << [ "Name", "Email", "Checked In", "Feedback Count", "Last Feedback" ]
+      csv << [ "Name", "Email", "Role", "Checked In", "Feedback Count", "Last Feedback" ]
 
       attendees.each do |attendee|
         csv << [
           attendee.name,
           attendee.email,
+          attendee.role.capitalize,
           attendee.checked_in? ? "Yes" : "No",
           attendee.feedbacks.count,
           attendee.feedbacks.order(:created_at).last&.created_at&.strftime("%Y-%m-%d %H:%M")

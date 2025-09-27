@@ -72,8 +72,8 @@ class AgendaController < ApplicationController
   end
 
   def check_in_stats
-    @total_attendees = User.attendees.count
-    @checked_in_count = User.checked_in.count
+    @total_attendees = User.where(role: [ "attendee", "admin" ]).count
+    @checked_in_count = User.where(role: [ "attendee", "admin" ]).checked_in.count
 
     respond_to do |format|
       format.html { render partial: "check_in_stats" }
