@@ -319,7 +319,7 @@ class FaceService:
                     print(f"Error comparing with user {known_face.get('user_id', 'unknown')}: {e}")
                     continue
             
-            if best_match:
+            if best_match and best_confidence >= 0.5:
                 print(f"Best match: User {best_match['user_id']} with confidence {best_match['confidence']:.3f}")
                 return {
                     "success": True,
