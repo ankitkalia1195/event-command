@@ -15,7 +15,7 @@ except ImportError:
 class FaceService:
     """Face recognition service with fallback implementation"""
     
-    def __init__(self, tolerance: float = 0.6):
+    def __init__(self, tolerance: float = 0.75):
         self.tolerance = tolerance
         # Initialize Haar cascade for face detection (used in fallback mode)
         self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
@@ -31,7 +31,7 @@ class FaceService:
                 image_data = image_data.split(",", 1)[1]
             
             image_bytes = base64.b64decode(image_data)
-            image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+            image = Image.open(io.BytesIO(image_bytes)).convert("RGB") 
             image_np = np.array(image)
             
             if USE_FACE_RECOGNITION:
@@ -54,6 +54,8 @@ class FaceService:
             
             # Get face encodings (use first face if multiple detected)
             face_encodings = face_recognition.face_encodings(image_np, face_locations)
+
+            print(face_encodings)
             
             if len(face_encodings) == 0:
                 return None
