@@ -345,14 +345,35 @@ rails server -p 3001
 4. User clicks link to authenticate
 5. Session created and user redirected to agenda
 
+## 🪝 Git Hooks
+
+This project includes a pre-push hook that automatically runs tests before allowing pushes to remote repositories.
+
+### Pre-Push Hook Features
+- ✅ Runs full test suite before push
+- 🛑 Prevents push if tests fail
+- ⚡ Can be disabled with `SKIP_TESTS=1`
+- 🎨 Colorized output for better readability
+
+### Usage
+```bash
+# Normal push (runs tests)
+git push origin main
+
+# Skip tests temporarily
+SKIP_TESTS=1 git push origin main
+```
+
+For detailed documentation, see [GIT_HOOKS.md](GIT_HOOKS.md).
+
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature-name`
 3. Make your changes
-4. Run tests: `rails test`
+4. Run tests: `rails test` (or let the pre-push hook handle it)
 5. Commit changes: `git commit -m "Add feature"`
-6. Push to branch: `git push origin feature-name`
+6. Push to branch: `git push origin feature-name` (tests will run automatically)
 7. Submit a pull request
 
 ## 📄 License

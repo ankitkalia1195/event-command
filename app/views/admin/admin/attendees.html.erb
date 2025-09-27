@@ -138,7 +138,12 @@
       <div class="px-6 py-4 border-t border-gray-800">
         <div class="flex items-center justify-between">
           <div class="text-sm text-gray-400">
-            Showing <%= @attendees.count %> attendees
+            Showing <%= @attendees.offset_value + 1 %>-<%= @attendees.offset_value + @attendees.count %> of <%= @attendees.total_count %> attendees
+          </div>
+          <div class="flex items-center space-x-2">
+            <%= paginate @attendees, 
+                  theme: 'twitter',
+                  params: { controller: 'admin/admin', action: 'attendees' } %>
           </div>
         </div>
       </div>

@@ -13,7 +13,8 @@ class Admin::AdminController < ApplicationController
     # Recent feedback
     @recent_feedback = Feedback.includes(:user, :session)
                               .order(created_at: :desc)
-                              .limit(5)
+                              .page(params[:page])
+                              .per(10)
 
     # Feedback analytics
     @average_rating = Feedback.average(:rating)&.round(1) || 0
@@ -27,7 +28,8 @@ class Admin::AdminController < ApplicationController
   def attendees
     @attendees = User.attendees.includes(:feedbacks)
                     .order(:name)
-                    .limit(20)
+                    .page(params[:page])
+                    .per(20)
 
     respond_to do |format|
       format.html

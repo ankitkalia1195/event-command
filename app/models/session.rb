@@ -51,6 +51,18 @@ class Session < ApplicationRecord
     past?
   end
 
+  def progress_percentage
+    return 0 unless current?
+
+    total_duration = duration
+    elapsed_time = Time.current - start_time
+
+    return 0 if elapsed_time <= 0
+    return 100 if elapsed_time >= total_duration
+
+    ((elapsed_time / total_duration) * 100).round
+  end
+
   private
 
   def end_time_after_start_time

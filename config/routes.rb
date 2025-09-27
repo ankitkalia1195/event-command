@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   # Attendee routes
   get "agenda", to: "agenda#index", as: :agenda
   post "check_in", to: "agenda#check_in", as: :check_in
+  get "agenda/session_status", to: "agenda#session_status", as: :agenda_session_status
+  get "agenda/check_in_stats", to: "agenda#check_in_stats", as: :agenda_check_in_stats
   get "sessions/:id", to: "sessions#show", as: :session
   get "feedback/session/:id", to: "feedback#new_session", as: :new_session_feedback
   post "feedback/session/:id", to: "feedback#create_session", as: :create_session_feedback

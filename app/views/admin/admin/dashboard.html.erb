@@ -134,6 +134,15 @@
             <p class="text-gray-400">No feedback yet</p>
           </div>
         <% end %>
+        
+        <!-- Pagination for Recent Feedback -->
+        <% if @recent_feedback.any? && @recent_feedback.total_pages > 1 %>
+          <div class="mt-4 flex justify-center">
+            <%= paginate @recent_feedback, 
+                  theme: 'twitter',
+                  params: { controller: 'admin/admin', action: 'dashboard' } %>
+          </div>
+        <% end %>
       </div>
 
       <!-- Rating Distribution -->
