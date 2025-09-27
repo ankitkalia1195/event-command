@@ -28,7 +28,7 @@ class Admin::AdminController < ApplicationController
     @attendees = User.attendees.includes(:feedbacks)
                     .order(:name)
                     .limit(20)
-    
+
     respond_to do |format|
       format.html
       format.csv { send_data generate_attendees_csv, filename: "attendees-#{Date.current}.csv" }

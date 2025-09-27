@@ -90,7 +90,7 @@ class SessionsController < ApplicationController
   end
 
   # Get all users with face encodings
-  users_with_faces = User.where.not(face_encoding_data: [nil, ""])
+  users_with_faces = User.where.not(face_encoding_data: [ nil, "" ])
 
   if users_with_faces.empty?
     render json: { success: false, error: "No registered faces found" }, status: :unprocessable_entity
@@ -102,7 +102,7 @@ class SessionsController < ApplicationController
     begin
       # Handle double-encoded JSON (string containing JSON string)
       encoding_data = user.face_encoding_data
-      
+
       # If it's a string that starts and ends with quotes, it's double-encoded
       if encoding_data.is_a?(String) && encoding_data.start_with?('"') && encoding_data.end_with?('"')
         # Remove outer quotes and parse the inner JSON
@@ -112,16 +112,16 @@ class SessionsController < ApplicationController
         # Normal case - just parse as JSON
         encoding = JSON.parse(encoding_data)
       end
-      
+
       # Ensure encoding is an array of numbers, not strings
       if encoding.is_a?(String)
         # If it's still a string representation of an array, parse it again
-        encoding = JSON.parse(encoding) if encoding.start_with?('[')
+        encoding = JSON.parse(encoding) if encoding.start_with?("[")
       end
-      
+
       # Convert to array of floats if needed
       encoding = encoding.map(&:to_f) if encoding.is_a?(Array)
-      
+
       { user_id: user.id, encoding: encoding }
     rescue JSON::ParserError => e
       Rails.logger.warn "Invalid face encoding for user #{user.id}: #{e.message}"
