@@ -15,6 +15,10 @@ Rails.application.configure do
   # Enable server timing.
   config.server_timing = true
 
+  # Active Storage URL configuration
+  config.active_storage.variant_processor = :mini_magick
+  config.active_storage.service_urls_expire_in = 1.hour
+
   # Enable/disable Action Controller caching. By default Action Controller caching is disabled.
   # Run rails dev:cache to toggle Action Controller caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?

@@ -74,82 +74,36 @@ class SessionsController < ApplicationController
 
   # Face authentication endpoint
   def face_authenticate
-  image_data = params[:face_image]
-  Rails.logger.info "Received face authentication request"
+    image_data = params[:face_image]
+    Rails.logger.info "Received face authentication request"
 
-  if image_data.blank?
-    render json: { success: false, error: "Missing face image" }, status: :bad_request
-    return
-  end
-
-  # Get all users with face encodings
-  users_with_faces = User.where.not(face_encoding_data: [ nil, "" ])
-
-  if users_with_faces.empty?
-    render json: { success: false, error: "No registered faces found" }, status: :unprocessable_entity
-    return
-  end
-
-  # Prepare known encodings for the Python service
-  known_encodings = users_with_faces.map do |user|
-    begin
-      # Handle double-encoded JSON (string containing JSON string)
-      encoding_data = user.face_encoding_data
-
-      # If it's a string that starts and ends with quotes, it's double-encoded
-      if encoding_data.is_a?(String) && encoding_data.start_with?('"') && encoding_data.end_with?('"')
-        # Remove outer quotes and parse the inner JSON
-        encoding_data = encoding_data[1..-2] # Remove first and last quote
-        encoding = JSON.parse(encoding_data)
-      else
-        # Normal case - just parse as JSON
-        encoding = JSON.parse(encoding_data)
-      end
-
-      # Ensure encoding is an array of numbers, not strings
-      if encoding.is_a?(String)
-        # If it's still a string representation of an array, parse it again
-        encoding = JSON.parse(encoding) if encoding.start_with?("[")
-      end
-
-      # Convert to array of floats if needed
-      encoding = encoding.map(&:to_f) if encoding.is_a?(Array)
-
-      { user_id: user.id, encoding: encoding }
-    rescue JSON::ParserError => e
-      Rails.logger.warn "Invalid face encoding for user #{user.id}: #{e.message}"
-      Rails.logger.warn "Encoding data: #{user.face_encoding_data[0..100]}..."
-      nil
+    if image_data.blank?
+      render json: { success: false, error: "Missing face image" }, status: :bad_request
+      return
     end
-  end.compact
 
-  if known_encodings.empty?
-    render json: { success: false, error: "No valid face encodings found" }, status: :unprocessable_entity
-    return
-  end
+    # Use the new User.authenticate_by_face method
+    result = User.authenticate_by_face(image_data)
 
-  # Call Python service for authentication
-  result = FaceRecognitionService.authenticate_face(image_data, known_encodings)
+    if result[:success] && result[:authenticated]
+      # Log the user in
+      user = result[:user]
+      session[:user_id] = user.id
 
-  if result[:success] && result[:authenticated]
-    # Log the user in
-    user = User.find(result[:user_id])
-    session[:user_id] = user.id
-
-    render json: {
-      success: true,
-      authenticated: true,
-      user_id: user.id,
-      user_name: user.name,
-      confidence: result[:confidence]
-    }
-  else
-    render json: {
-      success: false,
-      authenticated: false,
-      error: result[:error] || "Face authentication failed"
-    }, status: :unauthorized
-  end
+      render json: {
+        success: true,
+        authenticated: true,
+        user_id: user.id,
+        user_name: user.name,
+        confidence: result[:confidence]
+      }
+    else
+      render json: {
+        success: false,
+        authenticated: false,
+        error: result[:error] || "Face not recognized"
+      }
+    end
 
   rescue => e
     Rails.logger.error "Face authentication error: #{e.message}"

@@ -5,12 +5,24 @@ import base64
 import io
 from PIL import Image
 
-try:
-    import face_recognition
-    USE_FACE_RECOGNITION = True
-except ImportError:
-    USE_FACE_RECOGNITION = False
-    from sklearn.metrics.pairwise import cosine_similarity
+# Initialize face recognition availability
+USE_FACE_RECOGNITION = False
+face_recognition = None
+
+def _check_face_recognition():
+    global USE_FACE_RECOGNITION, face_recognition
+    if face_recognition is None:
+        try:
+            import face_recognition
+            # Test if face_recognition is properly installed
+            face_recognition.face_locations
+            USE_FACE_RECOGNITION = True
+            print("Face recognition library loaded successfully")
+        except (ImportError, AttributeError) as e:
+            print(f"Face recognition not available, using OpenCV fallback: {e}")
+            USE_FACE_RECOGNITION = False
+            face_recognition = None
+    return USE_FACE_RECOGNITION
 
 class FaceService:
     """Face recognition service with fallback implementation"""
@@ -46,6 +58,9 @@ class FaceService:
     def _encode_with_face_recognition(self, image_np: np.ndarray) -> Optional[List[float]]:
         """Use face_recognition library for encoding (recommended)"""
         try:
+            if not _check_face_recognition():
+                return None
+                
             # Find face locations
             face_locations = face_recognition.face_locations(image_np)
             
@@ -203,6 +218,9 @@ class FaceService:
     def _compare_with_face_recognition(self, known_encoding: List[float], unknown_encoding: List[float]) -> Dict[str, Any]:
         """Use face_recognition library for comparison"""
         try:
+            if not _check_face_recognition():
+                return self._compare_with_cosine_similarity(known_encoding, unknown_encoding)
+                
             known_np = np.array([known_encoding])
             unknown_np = np.array(unknown_encoding)
             

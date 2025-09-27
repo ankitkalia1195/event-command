@@ -45,11 +45,19 @@
                 <span class="text-sm text-gray-300">Welcome, <%= current_user&.name&.split&.first || "Guest" %></span>
               </div>
               
-              <!-- Profile Circle with Initials -->
-              <div class="w-8 h-8 bg-omise-teal rounded-full flex items-center justify-center">
-                <span class="text-xs font-bold text-black">
-                  <%= current_user&.name&.split&.map(&:first)&.join&.upcase || "G" %>
-                </span>
+              <!-- Profile Circle with Photo or Initials -->
+              <div class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
+                <% if current_user&.has_face_photo? %>
+                  <%= image_tag polymorphic_path(current_user.face_photo, only_path: true), 
+                        alt: current_user.name, 
+                        class: "profile-photo" %>
+                <% else %>
+                  <div class="profile-photo-fallback bg-omise-teal">
+                    <span class="text-xs font-bold">
+                      <%= current_user&.name&.split&.map(&:first)&.join&.upcase || "G" %>
+                    </span>
+                  </div>
+                <% end %>
               </div>
               
               <!-- Dropdown Arrow -->
@@ -67,11 +75,31 @@
               <div class="py-1">
                 <!-- User Info -->
                 <div class="px-4 py-3 border-b border-gray-700">
-                  <div class="text-sm font-medium text-white">
-                    <%= current_user&.name || "Guest" %>
-                  </div>
-                  <div class="text-xs text-gray-400">
-                    <%= current_user&.email %>
+                  <div class="flex items-center space-x-3">
+                    <!-- User Photo or Initials -->
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0">
+                      <% if current_user&.has_face_photo? %>
+                        <%= image_tag polymorphic_path(current_user.face_photo, only_path: true), 
+                              alt: current_user.name, 
+                              class: "profile-photo" %>
+                      <% else %>
+                        <div class="profile-photo-fallback bg-omise-teal">
+                          <span class="text-sm font-bold">
+                            <%= current_user&.name&.split&.map(&:first)&.join&.upcase || "G" %>
+                          </span>
+                        </div>
+                      <% end %>
+                    </div>
+                    
+                    <!-- User Details -->
+                    <div class="min-w-0 flex-1">
+                      <div class="text-sm font-medium text-white truncate">
+                        <%= current_user&.name || "Guest" %>
+                      </div>
+                      <div class="text-xs text-gray-400 truncate">
+                        <%= current_user&.email %>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 

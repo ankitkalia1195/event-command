@@ -84,3 +84,22 @@
   border-right: 8px solid transparent;
   border-bottom: 8px solid #374151;
 }
+
+/* Profile Photo Styling */
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-photo-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: black;
+}

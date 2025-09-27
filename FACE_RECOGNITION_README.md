@@ -15,19 +15,33 @@ A complete facial recognition authentication system integrated with your Rails e
 bin/rails runner create_sample_users.rb
 ```
 
-### 3. Add Face Encodings for Users
+### 3. Add Face Photos and Generate Encodings
+
+#### Option A: Batch Processing (Recommended)
 ```bash
 # Start the face service (if not already running)
 ./start_face_service.sh
 
-# Encode a face photo
-python python_services/encode_sample.py /path/to/user_photo.jpg
+# Add photos to the photos/ directory named as email addresses
+# Example: photos/john.doe@company.com.jpg
+#          photos/jane.smith@company.com.png
+#          photos/admin@company.com.jpeg
 
-# Add to user in Rails console
+# Process all photos in the photos/ directory
+# Users will be created automatically if they don't exist
+rails face:process_photos
+```
+
+#### Option B: Individual Processing
+```bash
+# Add face photo to a specific user
+rails face:add_photo[user@company.com,/path/to/user_photo.jpg]
+
+# Or add photo manually and generate encoding separately
 bin/rails console
 > user = User.find_by(email: 'user@company.com')
-> user.face_encoding_data = File.read('face_encoding.json')
-> user.save!
+> user.face_photo.attach(io: File.open('/path/to/photo.jpg'), filename: 'photo.jpg')
+> user.generate_face_encoding_from_photo
 ```
 
 ### 4. Test Face Login
@@ -69,8 +83,9 @@ bin/rails server -p 3000
   - `GET /face_login` - Face login page with webcam
   - `POST /face_authenticate` - Face authentication endpoint
 - **Service:** `FaceRecognitionService` - HTTP client for Python service
-- **Model:** `User` with face encoding methods
+- **Model:** `User` with face encoding methods and Active Storage
 - **Database:** `face_encoding_data` (text), `face_photo_url` (string)
+- **Active Storage:** `face_photo` attachment for storing user photos
 
 ## 🔧 Configuration
 
@@ -152,6 +167,49 @@ bin/rails console
 # Users table additions
 add_column :users, :face_encoding_data, :text
 add_column :users, :face_photo_url, :string
+
+# Active Storage tables (automatically created)
+# - active_storage_blobs
+# - active_storage_attachments
+# - active_storage_variant_records
+```
+
+## 🛠️ Management Commands
+
+```bash
+# Process all photos from photos/ directory (batch processing)
+# Creates users automatically if they don't exist
+rails face:process_photos
+
+# Create users from email list (without photos)
+rails face:create_users[emails.txt]
+
+# Add face photo to a specific user
+rails face:add_photo[user@example.com,/path/to/photo.jpg]
+
+# Generate face encodings for all users with photos
+rails face:generate_encodings
+
+# List users with face encodings
+rails face:list_encodings
+
+# Test face authentication
+rails face:test_auth
+```
+
+## 📁 File Structure
+
+```
+photos/                          # Batch processing directory
+├── user1@company.com.jpg        # Photo named as email
+├── user2@company.com.png        # Different formats supported
+└── README.md                    # Instructions
+
+python_services/                 # Face recognition service
+├── face_service/
+│   ├── api.py                   # FastAPI endpoints
+│   └── face_service.py          # Face recognition logic
+└── venv/                        # Python virtual environment
 ```
 
 ## 🎯 Next Steps
