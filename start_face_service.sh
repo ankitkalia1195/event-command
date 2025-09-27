@@ -22,7 +22,9 @@ source python_services/venv/bin/activate
 python -c "import face_recognition" 2>/dev/null
 if [ $? -ne 0 ]; then
     echo "⚠️  Installing face_recognition library..."
+    pip install wheel setuptools pip --upgrade
     pip install face_recognition
+    pip install git+https://github.com/ageitgey/face_recognition_models --verbose
 fi
 
 # Set PYTHONPATH to include the python_services directory
