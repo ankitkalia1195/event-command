@@ -24,10 +24,8 @@ class FeedbackController < ApplicationController
       end
     else
       Rails.logger.debug "Session feedback errors: #{@feedback.errors.full_messages}"
-      respond_to do |format|
-        format.html { render :new_session, status: :unprocessable_entity }
-        format.turbo_stream { render :new_session, status: :unprocessable_entity }
-      end
+      flash[:alert] = "Please fix the errors: #{@feedback.errors.full_messages.join(', ')}"
+      redirect_to new_session_feedback_path(@session)
     end
   end
 
@@ -56,23 +54,22 @@ class FeedbackController < ApplicationController
       end
     else
       Rails.logger.debug "Session feedback update errors: #{@feedback.errors.full_messages}"
-      respond_to do |format|
-        format.html { render :edit_session, status: :unprocessable_entity }
-        format.turbo_stream { render :edit_session, status: :unprocessable_entity }
-      end
+      flash[:alert] = "Please fix the errors: #{@feedback.errors.full_messages.join(', ')}"
+      redirect_to edit_session_feedback_path(@session, @feedback)
     end
   end
 
   def new_event
     @feedback = current_user.feedbacks.build(session: nil)
-
-    if current_user.feedbacks.overall_feedback.exists?
-      redirect_to agenda_path, alert: "You have already provided overall event feedback."
-      nil
-    end
   end
 
   def create_event
+    # Check if user already has overall event feedback
+    if current_user.feedbacks.overall_feedback.exists?
+      redirect_to agenda_path, alert: "You have already provided overall event feedback."
+      return
+    end
+
     @feedback = current_user.feedbacks.build(feedback_params.merge(session: nil))
 
     # Debug logging
@@ -86,10 +83,8 @@ class FeedbackController < ApplicationController
       end
     else
       Rails.logger.debug "Feedback errors: #{@feedback.errors.full_messages}"
-      respond_to do |format|
-        format.html { render :new_event, status: :unprocessable_entity }
-        format.turbo_stream { render :new_event, status: :unprocessable_entity }
-      end
+      flash[:alert] = "Please fix the errors: #{@feedback.errors.full_messages.join(', ')}"
+      redirect_to new_event_feedback_path
     end
   end
 
@@ -111,10 +106,8 @@ class FeedbackController < ApplicationController
       end
     else
       Rails.logger.debug "Event feedback update errors: #{@feedback.errors.full_messages}"
-      respond_to do |format|
-        format.html { render :edit_event, status: :unprocessable_entity }
-        format.turbo_stream { render :edit_event, status: :unprocessable_entity }
-      end
+      flash[:alert] = "Please fix the errors: #{@feedback.errors.full_messages.join(', ')}"
+      redirect_to edit_event_feedback_path(@feedback)
     end
   end
 

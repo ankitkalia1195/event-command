@@ -59,7 +59,8 @@ class Feedback < ApplicationRecord
   def overall_feedback_uniqueness
     return unless session_id.nil?
 
-    if user.feedbacks.overall_feedback.exists?
+    # Only check for duplicates if this is a new record (not updating existing)
+    if new_record? && user.feedbacks.overall_feedback.exists?
       errors.add(:base, "You have already provided overall event feedback")
     end
   end
